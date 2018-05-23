@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0608F8E3BB60313812AF33ED /* Pods_ShowerSong.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2647E5AF65B6991AA18591 /* Pods_ShowerSong.framework */; };
 		AD7427E120611DEF001D5954 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7427E020611DEF001D5954 /* AppDelegate.swift */; };
 		AD7427E320611DEF001D5954 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7427E220611DEF001D5954 /* ViewController.swift */; };
 		AD7427E620611DEF001D5954 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD7427E420611DEF001D5954 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		43E45FE5261249B2C2C35179 /* Pods-ShowerSong.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShowerSong.release.xcconfig"; path = "Pods/Target Support Files/Pods-ShowerSong/Pods-ShowerSong.release.xcconfig"; sourceTree = "<group>"; };
 		AD7427DD20611DEF001D5954 /* ShowerSong.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShowerSong.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD7427E020611DEF001D5954 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AD7427E220611DEF001D5954 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -32,6 +34,8 @@
 		AD7427F8206129D1001D5954 /* ShowerSong-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShowerSong-Bridging-Header.h"; sourceTree = "<group>"; };
 		AD7427F9206129D2001D5954 /* BridgeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeViewController.h; sourceTree = "<group>"; };
 		AD7427FA206129D2001D5954 /* BridgeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BridgeViewController.m; sourceTree = "<group>"; };
+		DF2647E5AF65B6991AA18591 /* Pods_ShowerSong.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShowerSong.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF604314A828D708B3819CEF /* Pods-ShowerSong.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShowerSong.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ShowerSong/Pods-ShowerSong.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,12 +46,22 @@
 				AD7427F62061299A001D5954 /* SpotifyMetadata.framework in Frameworks */,
 				AD7427F72061299A001D5954 /* SpotifyAuthentication.framework in Frameworks */,
 				AD7427F52061299A001D5954 /* SpotifyAudioPlayback.framework in Frameworks */,
+				0608F8E3BB60313812AF33ED /* Pods_ShowerSong.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D3AB0AFF88B059369A4A31A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FF604314A828D708B3819CEF /* Pods-ShowerSong.debug.xcconfig */,
+				43E45FE5261249B2C2C35179 /* Pods-ShowerSong.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		AD7427D420611DEF001D5954 = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +70,8 @@
 				AD7427DF20611DEF001D5954 /* ShowerSong */,
 				AD7427DE20611DEF001D5954 /* Products */,
 				AD7427F8206129D1001D5954 /* ShowerSong-Bridging-Header.h */,
+				4D3AB0AFF88B059369A4A31A /* Pods */,
+				C015A23049E20E8FA0E2D242 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -83,6 +99,14 @@
 			path = ShowerSong;
 			sourceTree = "<group>";
 		};
+		C015A23049E20E8FA0E2D242 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DF2647E5AF65B6991AA18591 /* Pods_ShowerSong.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -90,9 +114,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD7427EF20611DEF001D5954 /* Build configuration list for PBXNativeTarget "ShowerSong" */;
 			buildPhases = (
+				82A6C3DFAE30284B06372F46 /* [CP] Check Pods Manifest.lock */,
 				AD7427D920611DEF001D5954 /* Sources */,
 				AD7427DA20611DEF001D5954 /* Frameworks */,
 				AD7427DB20611DEF001D5954 /* Resources */,
+				142C4787A318A481FE99F309 /* [CP] Embed Pods Frameworks */,
+				F45E4F4A4A5E7E621D959A87 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -155,6 +182,64 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		142C4787A318A481FE99F309 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ShowerSong/Pods-ShowerSong-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
+				"${BUILT_PRODUCTS_DIR}/CocoaMQTT/CocoaMQTT.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyTimer/SwiftyTimer.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaMQTT.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyTimer.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ShowerSong/Pods-ShowerSong-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		82A6C3DFAE30284B06372F46 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ShowerSong-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F45E4F4A4A5E7E621D959A87 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ShowerSong/Pods-ShowerSong-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AD7427D920611DEF001D5954 /* Sources */ = {
@@ -298,6 +383,7 @@
 		};
 		AD7427F020611DEF001D5954 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FF604314A828D708B3819CEF /* Pods-ShowerSong.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -320,6 +406,7 @@
 		};
 		AD7427F120611DEF001D5954 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 43E45FE5261249B2C2C35179 /* Pods-ShowerSong.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

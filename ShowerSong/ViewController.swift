@@ -9,6 +9,7 @@
 import UIKit
 import SafariServices
 import AVFoundation
+import CocoaMQTT
 
 class ViewController: UIViewController {
  
@@ -26,10 +27,18 @@ class ViewController: UIViewController {
     var session: SPTSession?
     
     var playlistShowerUri : URL?
+    var mqtt : CocoaMQTT!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let clientID = "CocoaMQTT-" + String(ProcessInfo().processIdentifier)
+        self.mqtt = CocoaMQTT(clientID: clientID, host: "vps363392.ovh.net", port: 8080)
+        self.mqtt.delegate = self
+        print(mqtt.clientID)
+        self.mqtt.connect()
+        //mqtt.subscribe("showerShong/")
+
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.updateAfterFirstLogin), name: NSNotification.Name(rawValue: "loginSuccessfull"), object: nil)
         
         if let sessionObj:AnyObject = UserDefaults.standard.object(forKey: "SpotifySession") as AnyObject?,
@@ -89,7 +98,7 @@ class ViewController: UIViewController {
     func getUserPlaylists(){
         guard let session = self.session else { return }
         SPTPlaylistList.playlists(forUser: session.canonicalUsername, withAccessToken: session.accessToken, callback: { (error, response) in
-            
+            //pb ici
             if let listPage = response as? SPTPlaylistList, let playlists = listPage.items as? [SPTPartialPlaylist] {
                 for playlist in playlists {
                     if playlist.name.lowercased().contains("shower") {
@@ -101,20 +110,7 @@ class ViewController: UIViewController {
         
     }
     
-    //IBACTIONS
-    
-    @IBAction func onSpotifyLogin(_ sender: Any) {
-        setup()
-        guard let loginUrl = self.loginUrl else { return }
-        
-        UIApplication.shared.open(loginUrl, options: [:]) { (bool) in
-            if bool && self.auth.canHandle(self.auth.redirectURL) {
-                // To do - build in error handling
-            }
-        }
-    }
-    
-    @IBAction func onPlayPause(_ sender: UIButton) {
+    func execPlayPause(sender : UIButton){
         guard
             let player = self.player,
             let playlistURL = self.playlistShowerUri else { return }
@@ -138,6 +134,23 @@ class ViewController: UIViewController {
             sender.tag = 0
             sender.setTitle("Play", for: .normal)
         }
+    }
+    
+    //IBACTIONS
+    
+    @IBAction func onSpotifyLogin(_ sender: Any) {
+        setup()
+        guard let loginUrl = self.loginUrl else { return }
+        
+        UIApplication.shared.open(loginUrl, options: [:]) { (bool) in
+            if bool && self.auth.canHandle(self.auth.redirectURL) {
+                // To do - build in error handling
+            }
+        }
+    }
+    
+    @IBAction func onPlayPause(_ sender: UIButton) {
+        execPlayPause(sender: sender)
     }
     
     func activateAudioSession() {
@@ -191,6 +204,73 @@ extension ViewController : SPTAudioStreamingPlaybackDelegate, SPTAudioStreamingD
             self.deactivateAudioSession()
         }
     }
+}
+
+extension ViewController : CocoaMQTTDelegate{
+    func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck){
+        print("\n ==== didConnectAck ====")
+        print(ack)
+        mqtt.subscribe("showerShong/")
+    }
     
+    func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: UInt16){
+        guard let sendMessage = message.string else { return }
+        print("\n ==== didPublishMessage ====   \(message.topic)\(sendMessage)")
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: UInt16){
+        print("\n ==== didPublishAck ====   \(id)")
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ){
+        guard let receiveMessage = message.string else { return }
+        print("\n ==== didReceiveMessage ====   \(message.topic)\(receiveMessage) \t-\t \(Date())")
+        
+        execPlayPause(sender: playBtn)
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topic: String){
+        print("\n ==== didSubscribeTopic ====")
+        print(topic)
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: String){
+        print("\n ==== didUnsubscribeTopic ====")
+        self.mqtt.subscribe(topic)
+        print(topic)
+    }
+    
+    func mqttDidPing(_ mqtt: CocoaMQTT){
+        print("\n ==== mqttDidPing ====")
+        print(mqtt)
+    }
+    
+    func mqttDidReceivePong(_ mqtt: CocoaMQTT){
+        print("\n ==== mqttDidReceivePong ====")
+        print(mqtt)
+    }
+    
+    func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Error?){
+        print("\n ==== mqttDidDisconnect ====")
+        //DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            self.mqtt.connect()
+        //}
+        print(mqtt)
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didReceive trust: SecTrust, completionHandler: @escaping (Bool) -> Void){
+        print("\n ==== didReceive trust ====")
+        print(trust)
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didPublishComplete id: UInt16){
+        print("\n ==== didPublishComplete ====")
+        self.mqtt.disconnect()
+        print(id)
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didStateChangeTo state: CocoaMQTTConnState){
+        //print("\n ==== didStateChangeTo ====    \(state)")
+    }
     
 }
