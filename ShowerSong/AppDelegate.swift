@@ -30,13 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if auth.canHandle(auth.redirectURL) {
             auth.handleAuthCallback(withTriggeredAuthURL: url, callback: { (error, session) in
                 
-                
-                if error != nil {
-                    print("error!")
-                }
+                guard let session = session else { print(error.debugDescription); return }
                 let userDefaults = UserDefaults.standard
                 let sessionData = NSKeyedArchiver.archivedData(withRootObject: session)
-                print(sessionData)
+                //print(sessionData)
                 userDefaults.set(sessionData, forKey: "SpotifySession")
                 userDefaults.synchronize()
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "loginSuccessfull"), object: nil)
