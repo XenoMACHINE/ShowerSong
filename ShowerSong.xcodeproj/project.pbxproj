@@ -17,6 +17,20 @@
 		AD7427F62061299A001D5954 /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD7427F32061299A001D5954 /* SpotifyMetadata.framework */; };
 		AD7427F72061299A001D5954 /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD7427F42061299A001D5954 /* SpotifyAuthentication.framework */; };
 		AD7427FB206129D2001D5954 /* BridgeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AD7427FA206129D2001D5954 /* BridgeViewController.m */; };
+		ADF4595C20E67E80003B819F /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4594F20E67E7D003B819F /* Images.swift */; };
+		ADF4595D20E67E80003B819F /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595020E67E7E003B819F /* Album.swift */; };
+		ADF4595E20E67E80003B819F /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595120E67E7E003B819F /* Track.swift */; };
+		ADF4595F20E67E80003B819F /* Tracks.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595220E67E7E003B819F /* Tracks.swift */; };
+		ADF4596020E67E80003B819F /* Video_thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595320E67E7E003B819F /* Video_thumbnail.swift */; };
+		ADF4596120E67E80003B819F /* External_urls.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595420E67E7E003B819F /* External_urls.swift */; };
+		ADF4596220E67E80003B819F /* Json4Swift_Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595520E67E7F003B819F /* Json4Swift_Base.swift */; };
+		ADF4596320E67E80003B819F /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595620E67E7F003B819F /* Items.swift */; };
+		ADF4596420E67E80003B819F /* Owner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595720E67E7F003B819F /* Owner.swift */; };
+		ADF4596520E67E80003B819F /* External_ids.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595820E67E7F003B819F /* External_ids.swift */; };
+		ADF4596620E67E80003B819F /* Followers.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595920E67E80003B819F /* Followers.swift */; };
+		ADF4596720E67E80003B819F /* Artists.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595A20E67E80003B819F /* Artists.swift */; };
+		ADF4596820E67E80003B819F /* Added_by.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595B20E67E80003B819F /* Added_by.swift */; };
+		ADF4596A20E680A6003B819F /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4596920E680A6003B819F /* PlaylistCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +48,20 @@
 		AD7427F8206129D1001D5954 /* ShowerSong-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShowerSong-Bridging-Header.h"; sourceTree = "<group>"; };
 		AD7427F9206129D2001D5954 /* BridgeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeViewController.h; sourceTree = "<group>"; };
 		AD7427FA206129D2001D5954 /* BridgeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BridgeViewController.m; sourceTree = "<group>"; };
+		ADF4594F20E67E7D003B819F /* Images.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		ADF4595020E67E7E003B819F /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
+		ADF4595120E67E7E003B819F /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		ADF4595220E67E7E003B819F /* Tracks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tracks.swift; sourceTree = "<group>"; };
+		ADF4595320E67E7E003B819F /* Video_thumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Video_thumbnail.swift; sourceTree = "<group>"; };
+		ADF4595420E67E7E003B819F /* External_urls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = External_urls.swift; sourceTree = "<group>"; };
+		ADF4595520E67E7F003B819F /* Json4Swift_Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Json4Swift_Base.swift; sourceTree = "<group>"; };
+		ADF4595620E67E7F003B819F /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
+		ADF4595720E67E7F003B819F /* Owner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Owner.swift; sourceTree = "<group>"; };
+		ADF4595820E67E7F003B819F /* External_ids.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = External_ids.swift; sourceTree = "<group>"; };
+		ADF4595920E67E80003B819F /* Followers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Followers.swift; sourceTree = "<group>"; };
+		ADF4595A20E67E80003B819F /* Artists.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artists.swift; sourceTree = "<group>"; };
+		ADF4595B20E67E80003B819F /* Added_by.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Added_by.swift; sourceTree = "<group>"; };
+		ADF4596920E680A6003B819F /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		DF2647E5AF65B6991AA18591 /* Pods_ShowerSong.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShowerSong.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF604314A828D708B3819CEF /* Pods-ShowerSong.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShowerSong.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ShowerSong/Pods-ShowerSong.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,17 +114,39 @@
 		AD7427DF20611DEF001D5954 /* ShowerSong */ = {
 			isa = PBXGroup;
 			children = (
+				ADF4594E20E67E75003B819F /* Models */,
 				AD7427F22061299A001D5954 /* SpotifyAudioPlayback.framework */,
 				AD7427F42061299A001D5954 /* SpotifyAuthentication.framework */,
 				AD7427F32061299A001D5954 /* SpotifyMetadata.framework */,
 				AD7427E020611DEF001D5954 /* AppDelegate.swift */,
 				AD7427E220611DEF001D5954 /* ViewController.swift */,
+				ADF4596920E680A6003B819F /* PlaylistCell.swift */,
 				AD7427E420611DEF001D5954 /* Main.storyboard */,
 				AD7427E720611DEF001D5954 /* Assets.xcassets */,
 				AD7427E920611DEF001D5954 /* LaunchScreen.storyboard */,
 				AD7427EC20611DEF001D5954 /* Info.plist */,
 			);
 			path = ShowerSong;
+			sourceTree = "<group>";
+		};
+		ADF4594E20E67E75003B819F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				ADF4595B20E67E80003B819F /* Added_by.swift */,
+				ADF4595020E67E7E003B819F /* Album.swift */,
+				ADF4595A20E67E80003B819F /* Artists.swift */,
+				ADF4595820E67E7F003B819F /* External_ids.swift */,
+				ADF4595420E67E7E003B819F /* External_urls.swift */,
+				ADF4595920E67E80003B819F /* Followers.swift */,
+				ADF4594F20E67E7D003B819F /* Images.swift */,
+				ADF4595620E67E7F003B819F /* Items.swift */,
+				ADF4595520E67E7F003B819F /* Json4Swift_Base.swift */,
+				ADF4595720E67E7F003B819F /* Owner.swift */,
+				ADF4595120E67E7E003B819F /* Track.swift */,
+				ADF4595220E67E7E003B819F /* Tracks.swift */,
+				ADF4595320E67E7E003B819F /* Video_thumbnail.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		C015A23049E20E8FA0E2D242 /* Frameworks */ = {
@@ -191,12 +241,14 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ShowerSong/Pods-ShowerSong-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaMQTT/CocoaMQTT.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyTimer/SwiftyTimer.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaMQTT.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyTimer.framework",
@@ -246,9 +298,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADF4596120E67E80003B819F /* External_urls.swift in Sources */,
+				ADF4596620E67E80003B819F /* Followers.swift in Sources */,
+				ADF4596720E67E80003B819F /* Artists.swift in Sources */,
+				ADF4596420E67E80003B819F /* Owner.swift in Sources */,
 				AD7427FB206129D2001D5954 /* BridgeViewController.m in Sources */,
+				ADF4596820E67E80003B819F /* Added_by.swift in Sources */,
+				ADF4596520E67E80003B819F /* External_ids.swift in Sources */,
+				ADF4595C20E67E80003B819F /* Images.swift in Sources */,
+				ADF4596220E67E80003B819F /* Json4Swift_Base.swift in Sources */,
+				ADF4596020E67E80003B819F /* Video_thumbnail.swift in Sources */,
+				ADF4596320E67E80003B819F /* Items.swift in Sources */,
 				AD7427E320611DEF001D5954 /* ViewController.swift in Sources */,
 				AD7427E120611DEF001D5954 /* AppDelegate.swift in Sources */,
+				ADF4596A20E680A6003B819F /* PlaylistCell.swift in Sources */,
+				ADF4595D20E67E80003B819F /* Album.swift in Sources */,
+				ADF4595E20E67E80003B819F /* Track.swift in Sources */,
+				ADF4595F20E67E80003B819F /* Tracks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,10 +454,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B5H2YL5YCB;
+				DEVELOPMENT_TEAM = BGA6953D2T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ShowerSong",
+					"$(PROJECT_DIR)/ShowerSong/AudioKit-iOS",
 				);
 				INFOPLIST_FILE = ShowerSong/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -411,10 +478,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B5H2YL5YCB;
+				DEVELOPMENT_TEAM = BGA6953D2T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ShowerSong",
+					"$(PROJECT_DIR)/ShowerSong/AudioKit-iOS",
 				);
 				INFOPLIST_FILE = ShowerSong/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

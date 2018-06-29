@@ -18,7 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         auth.redirectURL     = URL(string: "ShowerSong://returnAfterLogin")
             auth.sessionUserDefaultsKey = "current session"
-            
+        
+        application.isIdleTimerDisabled = true
+        
         return true
     }
     

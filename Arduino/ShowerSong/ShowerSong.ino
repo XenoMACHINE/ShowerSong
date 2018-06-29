@@ -3,26 +3,39 @@
 #include <WebServer.h>
 #include <WiFiManager.h>   
 #include <PubSubClient.h>
+#include <TM1637Display.h>
 
-#define WIFI_SSID "Te connecte pas malheureux"
-#define WIFI_PASSWORD "xenomachine"
+#define WIFI_SSID "iPhone Alex"
+#define WIFI_PASSWORD "xenox7676"
 
 const char* mqtt_server = "vps363392.ovh.net";
 String url = "showerSong/";
+String clockUrl = url + "clock/";
 //String urlPlay = url + "/playPause/";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-//#define LED_BUILTIN 16
+const int buttonPlayPause = 27;     // the number of the pushbutton pin
+const int buttonNext = 14;
+const int buttonPrev = 26;
+const int buttonVolMore = 13;
+const int buttonVolLess = 12;
 
-const int buttonPlayPause = 25;//4     // the number of the pushbutton pin
-const int buttonNext = 33;
-const int buttonPrev = 32;
-const int buttonVolMore = 27;
-const int buttonVolLess = 26;
+const int playPauseLED = 5;
+const int buttonNextLED = 4;
+const int buttonPrevLED = 18;
+const int buttonVolMoreLED = 15;
+const int buttonVolLessLED = 2;
 
 int hasClicked = 0;
+int playPauseStatus = 0;
+int blinkStatus = 0;
+
+const int CLK = 25; //Set the CLK pin connection to the display
+const int DIO = 33; //Set the DIO pin connection to the display
+
+TM1637Display display(CLK, DIO);
 
 void setup() {
  
@@ -35,6 +48,15 @@ void setup() {
   pinMode(buttonPrev, INPUT);
   pinMode(buttonVolMore, INPUT);
   pinMode(buttonVolLess, INPUT);
+
+  pinMode(playPauseLED, OUTPUT);
+  pinMode(buttonNextLED, OUTPUT);
+  pinMode(buttonPrevLED, OUTPUT);
+  pinMode(buttonVolMoreLED, OUTPUT);
+  pinMode(buttonVolLessLED, OUTPUT);
+
+  display.setBrightness(0x0f);
+  display.showNumberDecEx(0, 0b01000000, true);
 
   /*WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("connecting");
@@ -55,6 +77,7 @@ void setup() {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
     if (client.connect("ShowersongESP" + random(1000))) {
+      client.subscribe(clockUrl.c_str());
       Serial.println("connected");
     } else {
       client.disconnect();
@@ -65,21 +88,24 @@ void setup() {
       delay(2000);
     }
   }
-  
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
  
-  Serial.print("Message arrived in topic: ");
-  Serial.println(topic);
+  //Serial.print("Message arrived in topic: ");
+  //Serial.println(topic);
  
-  Serial.print("Message:");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+  //Serial.print("Message:");
+  String message = "";
+  for (int i=0; i < length; i++) {
+    message += (char)payload[i];
+    //Serial.print((char)payload[i]);
   }
  
-  Serial.println();
-  Serial.println("-----------------------");
+  //Serial.println();
+  //Serial.println("-----------------------");
+  
+  display.showNumberDecEx(message.toInt(), 0b01000000, true);
 }
 
   
@@ -94,6 +120,13 @@ void loop() {
     if (hasClicked == 0){
       Serial.println("--------PlayPause---------");
       client.publish(url.c_str(), "PlayPause");
+      
+      if(playPauseStatus == 1){
+        playPauseStatus = 0;
+      }else{
+        playPauseStatus = 1;
+      }
+
       hasClicked = 1;
     }
   } else if (digitalRead(buttonNext) == HIGH) {
@@ -108,19 +141,32 @@ void loop() {
       client.publish(url.c_str(), "Prev");
       hasClicked = 1;
     }
-  } else {
-      hasClicked = 0;
-  }
-
-  if (digitalRead(buttonVolMore) == HIGH) {
-      Serial.println("--------Volume more---------");
-      client.publish(url.c_str(), "More");
-  } 
-  
-  if (digitalRead(buttonVolLess) == HIGH) {
+  } else if (digitalRead(buttonVolLess) == HIGH) {
       Serial.println("--------Volume less---------");
       client.publish(url.c_str(), "Less");
+  } else if (digitalRead(buttonVolMore) == HIGH) {
+      Serial.println("--------Volume more---------");
+      client.publish(url.c_str(), "More");
+  } else {
+      //Serial.println("nothing");
+      hasClicked = 0;
   }
   
-  delay(100);
+
+  //Blink when pause
+  if(playPauseStatus == 0){//for 100 delay (5 and 10)
+    if(blinkStatus >= 3){
+      if(blinkStatus == 6){
+        blinkStatus = 0;
+      }
+      digitalWrite(playPauseLED, HIGH);
+    }else{
+      digitalWrite(playPauseLED, LOW);
+    }
+    blinkStatus++;
+  }else{
+    digitalWrite(playPauseLED, LOW);
+  }
+  
+  delay(200);
 }

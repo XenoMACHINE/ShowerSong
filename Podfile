@@ -7,5 +7,6 @@ target 'ShowerSong' do
 
   # Pods
   pod 'CocoaMQTT'
+  pod ‘Alamofire’
 
 end

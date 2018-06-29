@@ -12,18 +12,26 @@ import AVFoundation
 import CocoaMQTT
 import MediaPlayer
 import AVKit
+import Alamofire
 
 class ViewController: UIViewController {
  
+    @IBOutlet weak var titleView: UILabel!
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var playBtn: UIButton!
     @IBOutlet weak var playButtons: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    var albumImages : [UIImageView] = []
+    var tracks : [Track] = []
     var isMqttConnected = false
     
     // Variables
+    var lastMqttMessage = ""
+    var canExecCommands = true
     var auth = SPTAuth.defaultInstance()!
+    var needWait = false
     
     // Initialzed in either updateAfterFirstLogin: (if first time login) or in viewDidLoad (when there is a check for a session object in User Defaults
     var player: SPTAudioStreamingController?
@@ -32,9 +40,12 @@ class ViewController: UIViewController {
     
     var playlistShowerUri : URL?
     var mqtt : CocoaMQTT!
+    var currentHour = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        clockManager()
         
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.updateAfterFirstLogin), name: NSNotification.Name(rawValue: "loginSuccessfull"), object: nil)
         
@@ -46,8 +57,10 @@ class ViewController: UIViewController {
             if session.isValid(){
                 self.activityIndicator.startAnimating()
                 self.loginButton.isHidden = true
+                self.titleView.isHidden = false
                 initializaPlayer(authSession: session)
-            }/*else{
+            }
+            /*else{
                 self.setup()
                 let refreshURL = "ShowerSong://refreshURL" // put your redirect URL here
                 let swapURL = "ShowerSong://swapURL" // put your redirect URL here
@@ -72,6 +85,27 @@ class ViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func clockManager(){
+        //tmp pr test (push tte les Xsec)
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { (timer) in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HHmm"
+            let hour = dateFormatter.string(from: Date())
+            self.currentHour = hour
+            self.mqtt.publish("showerSong/clock/", withString: self.currentHour)
+        }
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HHmm"
+            let hour = dateFormatter.string(from: Date())
+            if self.currentHour != hour {
+                self.currentHour = hour
+                self.mqtt.publish("showerSong/clock/", withString: self.currentHour)
+                print(hour)
+            }
+        }
     }
     
     func setupMqtt(){
@@ -129,7 +163,7 @@ class ViewController: UIViewController {
         let clientID = "36c5e0558e0545bd93592e79f1c32e02" // put your client ID here
         auth.redirectURL     = URL(string: redirectURL)
         auth.clientID        = clientID
-        auth.requestedScopes = [SPTAuthStreamingScope, SPTAuthPlaylistReadPrivateScope, SPTAuthPlaylistModifyPublicScope, SPTAuthPlaylistModifyPrivateScope]
+        auth.requestedScopes = [SPTAuthStreamingScope, SPTAuthPlaylistReadPrivateScope, SPTAuthUserReadTopScope, SPTAuthPlaylistModifyPublicScope, SPTAuthPlaylistModifyPrivateScope, SPTAuthUserReadPrivateScope]
         loginUrl = auth.spotifyWebAuthenticationURL()
     }
     
@@ -149,11 +183,59 @@ class ViewController: UIViewController {
                 for playlist in playlists {
                     if playlist.name.lowercased().contains("shower") {
                         self.playlistShowerUri = playlist.uri
+                        self.getPlaylistFromApi()
                     }
                 }
             }
         })
         
+    }
+    
+    func getPlaylistId() -> String{
+        var result = ""
+        
+        for char in playlistShowerUri?.absoluteString.reversed() ?? []{
+            if char == ":"{
+                break
+            }
+            result = "\(char)\(result)"
+        }
+        
+        return result
+    }
+    
+    func getPlaylistFromApi(){
+        guard let session = self.session else { return }
+        let url = "https://api.spotify.com/v1/users/\(session.canonicalUsername ?? "")/playlists/" + getPlaylistId()
+        let headers : HTTPHeaders  = ["Authorization":"Bearer " + session.accessToken]
+        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).validate()
+            .responseJSON(completionHandler: { (response) in
+                
+                if let json = response.result.value as? [String:Any],
+                let tracks = json["tracks"] as? [String:Any],
+                let items = tracks["items"] as? [[String:Any]]{
+                    print(items)
+                    for item in items{
+                        if let trackDic = item["track"] as? NSDictionary{
+                            if let track = Track(dictionary: trackDic){
+                                self.tracks.append(track)
+                                self.albumImages.append(UIImageView(image: #imageLiteral(resourceName: "music_placeholder2")))
+                            }
+                        }
+                    }
+                    self.tableView.reloadData()
+                    self.setImages()
+                }
+                
+            })
+    }
+    
+    func setImages(){
+        for i in 0..<tracks.count{
+            if let imageUrl = tracks[i].album?.images?.first?.url {
+                self.albumImages[i].downloadedFrom(link: imageUrl, contentMode: .scaleAspectFit, tableview: tableView)
+            }
+        }
     }
     
     func execPlayPause(sender : UIButton){
@@ -181,6 +263,7 @@ class ViewController: UIViewController {
             }
         }else {
             //try? player.stop()
+            
             player.setIsPlaying(false, callback: nil)
             sender.tag = 0
             sender.setTitle("Play", for: .normal)
@@ -233,6 +316,29 @@ class ViewController: UIViewController {
     func activateAudioSession() {
         try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
         try? AVAudioSession.sharedInstance().setActive(true)
+    }
+    
+    func execCommands(receiveMessage : String){
+        guard canExecCommands else { return }
+        switch receiveMessage {
+        case "PlayPause":
+            execPlayPause(sender: playBtn)
+            break
+        case "Next":
+            execNext()
+            break
+        case "Prev":
+            execPrevious()
+            break
+        case "More":
+            execVolumeMore()
+            break
+        case "Less":
+            execVolumeLess()
+            break
+        default:
+            break
+        }
     }
     
     // MARK: Deactivate audio session
@@ -302,24 +408,15 @@ extension ViewController : CocoaMQTTDelegate{
         guard let receiveMessage = message.string else { return }
         print("\n ==== didReceiveMessage ====   \(message.topic)\(receiveMessage) \t-\t \(Date())")
         
-        switch receiveMessage {
-        case "PlayPause":
-            execPlayPause(sender: playBtn)
-            break
-        case "Next":
-            execNext()
-            break
-        case "Prev":
-            execPrevious()
-            break
-        case "More":
-            execVolumeMore()
-            break
-        case "Less":
-            execVolumeLess()
-            break
-        default:
-            break
+        if !needWait{
+            lastMqttMessage = receiveMessage
+            execCommands(receiveMessage: receiveMessage)
+            needWait = true
+            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { (timer) in
+                self.needWait = false
+            }
+        }else if receiveMessage == self.lastMqttMessage{
+            self.execCommands(receiveMessage: receiveMessage)
         }
     }
     
@@ -367,4 +464,82 @@ extension ViewController : CocoaMQTTDelegate{
         //print("\n ==== didStateChangeTo ====    \(state)")
     }
     
+}
+
+extension ViewController : UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return tracks.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell : PlaylistCell = tableView.dequeueReusableCell(withIdentifier: "PlaylistCell", for: indexPath) as? PlaylistCell else { return UITableViewCell() }
+        
+        let track = tracks[indexPath.row]
+        
+        cell.titleLabel.text = track.name ?? ""
+        
+        var artistsName = ""
+        
+        if let artists = track.artists{
+            for artist in artists{
+                artistsName += artist.name ?? ""
+                artistsName += ", "
+            }
+        }
+        
+        let endIndex = artistsName.index(artistsName.endIndex, offsetBy: -2)
+        cell.artistLabel.text = artistsName.substring(to: endIndex)
+        
+        if let duration = track.duration_ms{
+            let sec = duration / 1000
+            let min = sec / 60
+            let secRest = sec - (min * 60)
+            cell.timeLabel.text = "\(min):\(secRest)"
+        }
+        
+        if indexPath.row % 2 == 0 {
+            cell.backgroundColor = cell.backgroundColor2
+        }else{
+            cell.backgroundColor = cell.backgroundColor1
+        }
+        
+        cell.trackImage.image = albumImages[indexPath.row].image
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.reloadData()
+    }
+}
+
+extension UIImageView {
+    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit, tableview : UITableView? = nil) {
+        contentMode = mode
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard
+                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+                let data = data, error == nil,
+                let image = UIImage(data: data)
+                else { return }
+            DispatchQueue.main.async() {
+                self.image = image
+                if let tableview = tableview{
+                    tableview.reloadData()
+                }
+            }
+            }.resume()
+    }
+    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleAspectFit, tableview : UITableView? = nil) {
+        guard let url = URL(string: link) else { return }
+        if let tableview = tableview{
+            downloadedFrom(url: url, contentMode: mode, tableview : tableview)
+            return
+        }
+        downloadedFrom(url: url, contentMode: mode)
+    }
 }
