@@ -172,6 +172,19 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kUt-dR-cag">
+                                <rect key="frame" x="12" y="34.5" width="20" height="19"/>
+                                <color key="backgroundColor" red="0.78431372549019607" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="kUt-dR-cag" secondAttribute="height" multiplier="1:1" constant="1" id="Hdr-zH-Dae"/>
+                                    <constraint firstAttribute="width" constant="20" id="LJB-4s-pQs"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -182,11 +195,13 @@
                             <constraint firstItem="jqW-FB-xew" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="12" id="NSB-gc-cH0"/>
                             <constraint firstItem="lzq-Zj-C9g" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="SKN-SZ-Mye"/>
                             <constraint firstItem="Buh-Tx-Bic" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Y7S-pO-2m8"/>
+                            <constraint firstItem="kUt-dR-cag" firstAttribute="centerY" secondItem="jqW-FB-xew" secondAttribute="centerY" id="Yz9-ki-iTe"/>
                             <constraint firstItem="fvN-bY-MK3" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="aT5-D1-Yy7"/>
                             <constraint firstItem="lzq-Zj-C9g" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="jzS-4i-Gyp"/>
                             <constraint firstItem="fvN-bY-MK3" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="nJa-zj-cfZ"/>
                             <constraint firstItem="jqW-FB-xew" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="saY-3f-mlT"/>
                             <constraint firstItem="Buh-Tx-Bic" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" multiplier="1.2" id="shn-OS-OYT"/>
+                            <constraint firstItem="kUt-dR-cag" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="vbs-OF-pwI"/>
                             <constraint firstItem="fvN-bY-MK3" firstAttribute="top" secondItem="jqW-FB-xew" secondAttribute="bottom" constant="20" id="xFO-O5-iRd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -198,6 +213,7 @@
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="Buh-Tx-Bic" id="l19-gl-U3m"/>
+                        <outlet property="connectedView" destination="kUt-dR-cag" id="PHw-h2-BBK"/>
                         <outlet property="loginButton" destination="NQb-PQ-h2S" id="8QG-gf-eKv"/>
                         <outlet property="playBtn" destination="Qe0-DC-4ai" id="MNM-WE-fWw"/>
                         <outlet property="playButtons" destination="lzq-Zj-C9g" id="bGx-7E-1Ey"/>

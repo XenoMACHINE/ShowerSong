@@ -16,6 +16,7 @@ import Alamofire
 
 class ViewController: UIViewController {
  
+    @IBOutlet weak var connectedView: UIView!
     @IBOutlet weak var titleView: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var loginButton: UIButton!
@@ -23,6 +24,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var playButtons: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    var boxConnected = false
     var albumImages : [UIImageView] = []
     var tracks : [Track] = []
     var isMqttConnected = false
@@ -44,8 +46,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        clockManager()
         
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.updateAfterFirstLogin), name: NSNotification.Name(rawValue: "loginSuccessfull"), object: nil)
         
@@ -89,13 +89,13 @@ class ViewController: UIViewController {
     
     func clockManager(){
         //tmp pr test (push tte les Xsec)
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { (timer) in
+        /*Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { (timer) in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "HHmm"
             let hour = dateFormatter.string(from: Date())
             self.currentHour = hour
             self.mqtt.publish("showerSong/clock/", withString: self.currentHour)
-        }
+        }*/
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "HHmm"
@@ -370,6 +370,7 @@ extension ViewController : SPTAudioStreamingPlaybackDelegate, SPTAudioStreamingD
         // after a user authenticates a session, the SPTAudioStreamingController is then initialized and this method called
         playButtons.isHidden = false
         getUserPlaylists()
+        self.titleView.isHidden = false
         self.loginButton.isHidden = true
     }
     
@@ -390,9 +391,23 @@ extension ViewController : SPTAudioStreamingPlaybackDelegate, SPTAudioStreamingD
 extension ViewController : CocoaMQTTDelegate{
     func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck){
         print("\n ==== didConnectAck ====")
-        print(ack)
         isMqttConnected = true
         mqtt.subscribe("showerSong/")
+        mqtt.subscribe("showerSong/connection/")
+        if !boxConnected{
+            self.mqtt.publish("showerSong/connection/", withString: "1") //1 = appli connecté
+            Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: { (timer) in
+                if self.boxConnected{
+                    timer.invalidate()
+                }else{
+                    mqtt.disconnect()
+                    self.isMqttConnected = false
+                    Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: { (timer) in
+                        self.setupMqtt()
+                    })
+                }
+            })
+        }
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: UInt16){
@@ -401,12 +416,25 @@ extension ViewController : CocoaMQTTDelegate{
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: UInt16){
-        print("\n ==== didPublishAck ====   \(id)")
+        //print("\n ==== didPublishAck ====   \(id)")
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ){
         guard let receiveMessage = message.string else { return }
         print("\n ==== didReceiveMessage ====   \(message.topic)\(receiveMessage) \t-\t \(Date())")
+        
+        if message.topic.contains("connection"){
+            if receiveMessage.contains("2") { //box co
+                boxConnected = true
+                clockManager()
+                connectedView.backgroundColor = #colorLiteral(red: 0, green: 0.8049334288, blue: 0, alpha: 1)
+            }
+            if receiveMessage.contains("0") { //box deco
+                boxConnected = false
+                connectedView.backgroundColor = #colorLiteral(red: 0.8334491849, green: 0.1151285842, blue: 0, alpha: 1)
+            }
+            return
+        }
         
         if !needWait{
             lastMqttMessage = receiveMessage
@@ -445,7 +473,9 @@ extension ViewController : CocoaMQTTDelegate{
         print("\n ==== mqttDidDisconnect ====")
         //DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
         //}
-        self.setupMqtt()
+        if boxConnected{
+            self.setupMqtt()
+        }
         print(mqtt)
     }
     

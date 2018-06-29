@@ -10,6 +10,7 @@
 
 const char* mqtt_server = "vps363392.ovh.net";
 String url = "showerSong/";
+String connectionUrl = "showerSong/connection/";
 String clockUrl = url + "clock/";
 //String urlPlay = url + "/playPause/";
 
@@ -78,6 +79,7 @@ void setup() {
     // Attempt to connect
     if (client.connect("ShowersongESP" + random(1000))) {
       client.subscribe(clockUrl.c_str());
+      client.subscribe(connectionUrl.c_str());
       Serial.println("connected");
     } else {
       client.disconnect();
@@ -99,7 +101,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   String message = "";
   for (int i=0; i < length; i++) {
     message += (char)payload[i];
-    //Serial.print((char)payload[i]);
+    Serial.print((char)payload[i]);
+  }
+
+  if(message == "1"){
+    Serial.println("\n");
+    Serial.println(connectionUrl);
+    client.publish(connectionUrl.c_str(), "2");
   }
  
   //Serial.println();
