@@ -16,8 +16,8 @@ import Alamofire
 
 class ViewController: UIViewController {
  
+    @IBOutlet weak var topView: UIView!
     @IBOutlet weak var connectedView: UIView!
-    @IBOutlet weak var titleView: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var playBtn: UIButton!
@@ -47,6 +47,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.isEditing = true
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.updateAfterFirstLogin), name: NSNotification.Name(rawValue: "loginSuccessfull"), object: nil)
         
         if let sessionObj:AnyObject = UserDefaults.standard.object(forKey: "SpotifySession") as AnyObject?,
@@ -57,7 +58,7 @@ class ViewController: UIViewController {
             if session.isValid(){
                 self.activityIndicator.startAnimating()
                 self.loginButton.isHidden = true
-                self.titleView.isHidden = false
+                self.topView.isHidden = false
                 initializaPlayer(authSession: session)
             }
             /*else{
@@ -80,6 +81,10 @@ class ViewController: UIViewController {
         }
         
         setupMqtt()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getPlaylistFromApi()
     }
 
     override func didReceiveMemoryWarning() {
@@ -211,10 +216,12 @@ class ViewController: UIViewController {
         Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).validate()
             .responseJSON(completionHandler: { (response) in
                 
+                self.albumImages.removeAll()
+                self.tracks.removeAll()
+                
                 if let json = response.result.value as? [String:Any],
                 let tracks = json["tracks"] as? [String:Any],
                 let items = tracks["items"] as? [[String:Any]]{
-                    print(items)
                     for item in items{
                         if let trackDic = item["track"] as? NSDictionary{
                             if let track = Track(dictionary: trackDic){
@@ -362,6 +369,14 @@ class ViewController: UIViewController {
     
     @IBAction func onRandom(_ sender: Any) {
     }
+    
+    @IBAction func goToSearch(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let searchVC = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as! SearchViewController
+        searchVC.session = self.session
+        searchVC.playlistId = getPlaylistId()
+        self.present(searchVC, animated: true)
+    }
 }
 
 extension ViewController : SPTAudioStreamingPlaybackDelegate, SPTAudioStreamingDelegate {
@@ -370,7 +385,7 @@ extension ViewController : SPTAudioStreamingPlaybackDelegate, SPTAudioStreamingD
         // after a user authenticates a session, the SPTAudioStreamingController is then initialized and this method called
         playButtons.isHidden = false
         getUserPlaylists()
-        self.titleView.isHidden = false
+        self.topView.isHidden = false
         self.loginButton.isHidden = true
     }
     
@@ -543,6 +558,84 @@ extension ViewController : UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadData()
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return "Supprimer"
+    }
+    
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            
+            let url = "https://api.spotify.com/v1/users/\(session?.canonicalUsername ?? "")/playlists/\(getPlaylistId())/tracks"
+            let track = tracks[indexPath.row]
+            let parameters : Parameters = ["tracks": [["uri":"spotify:track:\(track.id ?? "")"]]]
+            
+            guard let session = self.session else { return }
+            let headers : HTTPHeaders  = ["Authorization":"Bearer " + session.accessToken]
+            Alamofire.request(url, method: .delete, parameters: parameters, encoding: JSONEncoding.default, headers: headers)//.validate()
+                .responseJSON(completionHandler: { (response) in
+                    
+                    print("Tracks deleted")
+                })
+            
+            self.albumImages.remove(at: indexPath.row)
+            self.tracks.remove(at: indexPath.row)
+            self.tableView.reloadData()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        let url = "https://api.spotify.com/v1/users/\(session?.canonicalUsername ?? "")/playlists/\(getPlaylistId())/tracks"
+        
+        var parameters : Parameters = ["range_start": sourceIndexPath.row, "insert_before": destinationIndexPath.row]
+        
+        if destinationIndexPath.row > sourceIndexPath.row{
+            parameters = ["range_start": sourceIndexPath.row, "insert_before": destinationIndexPath.row + 1]
+        }
+        
+        guard let session = self.session else { return }
+        let headers : HTTPHeaders  = ["Authorization":"Bearer " + session.accessToken]
+        Alamofire.request(url, method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: headers)//.validate()
+            .responseJSON(completionHandler: { (response) in
+                
+                print("Tracks deleted")
+                self.getPlaylistFromApi()
+            })
+        
+        return
+        
+        var tmpTracks : [Track] = []
+        var tmpImages : [UIImageView] = []
+        
+        for i in (sourceIndexPath.row+1)..<(destinationIndexPath.row+1){
+            tmpTracks.append(tracks[i])
+            tmpImages.append(albumImages[i])
+        }
+        
+        
+        tracks[destinationIndexPath.row] = tracks[sourceIndexPath.row]
+        albumImages[destinationIndexPath.row] = albumImages[sourceIndexPath.row]
+        
+        var index = 0;
+        for i in sourceIndexPath.row..<destinationIndexPath.row{
+            tracks[i] = tmpTracks[index]
+            albumImages[i] = tmpImages[index]
+            index += 1
+        }
     }
 }
 

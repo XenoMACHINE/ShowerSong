@@ -31,6 +31,7 @@
 		ADF4596720E67E80003B819F /* Artists.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595A20E67E80003B819F /* Artists.swift */; };
 		ADF4596820E67E80003B819F /* Added_by.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4595B20E67E80003B819F /* Added_by.swift */; };
 		ADF4596A20E680A6003B819F /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4596920E680A6003B819F /* PlaylistCell.swift */; };
+		ADF4596C20E77F28003B819F /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF4596B20E77F28003B819F /* SearchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		ADF4595A20E67E80003B819F /* Artists.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artists.swift; sourceTree = "<group>"; };
 		ADF4595B20E67E80003B819F /* Added_by.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Added_by.swift; sourceTree = "<group>"; };
 		ADF4596920E680A6003B819F /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
+		ADF4596B20E77F28003B819F /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		DF2647E5AF65B6991AA18591 /* Pods_ShowerSong.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShowerSong.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF604314A828D708B3819CEF /* Pods-ShowerSong.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShowerSong.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ShowerSong/Pods-ShowerSong.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -120,6 +122,7 @@
 				AD7427F32061299A001D5954 /* SpotifyMetadata.framework */,
 				AD7427E020611DEF001D5954 /* AppDelegate.swift */,
 				AD7427E220611DEF001D5954 /* ViewController.swift */,
+				ADF4596B20E77F28003B819F /* SearchViewController.swift */,
 				ADF4596920E680A6003B819F /* PlaylistCell.swift */,
 				AD7427E420611DEF001D5954 /* Main.storyboard */,
 				AD7427E720611DEF001D5954 /* Assets.xcassets */,
@@ -310,6 +313,7 @@
 				ADF4596020E67E80003B819F /* Video_thumbnail.swift in Sources */,
 				ADF4596320E67E80003B819F /* Items.swift in Sources */,
 				AD7427E320611DEF001D5954 /* ViewController.swift in Sources */,
+				ADF4596C20E77F28003B819F /* SearchViewController.swift in Sources */,
 				AD7427E120611DEF001D5954 /* AppDelegate.swift in Sources */,
 				ADF4596A20E680A6003B819F /* PlaylistCell.swift in Sources */,
 				ADF4595D20E67E80003B819F /* Album.swift in Sources */,
