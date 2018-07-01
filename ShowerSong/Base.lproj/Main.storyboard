@@ -50,9 +50,22 @@
                                             <action selector="goToSearch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="w1f-br-yS6"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JjG-si-TNx">
+                                        <rect key="frame" x="52" y="27.5" width="25" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="JjG-si-TNx" secondAttribute="height" multiplier="1:1" id="P4l-rv-Z5O"/>
+                                            <constraint firstAttribute="width" constant="25" id="VFH-aM-6s5"/>
+                                        </constraints>
+                                        <state key="normal" image="shuffle"/>
+                                        <connections>
+                                            <action selector="onLoop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jUN-Ed-ATk"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="JjG-si-TNx" firstAttribute="centerY" secondItem="Grk-3Q-I4v" secondAttribute="centerY" id="0oG-xt-cG0"/>
+                                    <constraint firstItem="JjG-si-TNx" firstAttribute="leading" secondItem="kUt-dR-cag" secondAttribute="trailing" constant="12" id="0wp-BI-CWV"/>
                                     <constraint firstAttribute="trailing" secondItem="MYM-2T-Gtg" secondAttribute="trailing" constant="20" id="3jh-FT-wP7"/>
                                     <constraint firstItem="kUt-dR-cag" firstAttribute="centerY" secondItem="Grk-3Q-I4v" secondAttribute="centerY" id="N6N-M0-D5N"/>
                                     <constraint firstItem="kUt-dR-cag" firstAttribute="leading" secondItem="Grk-3Q-I4v" secondAttribute="leading" constant="20" id="aOj-Uk-WeV"/>
@@ -73,6 +86,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="146"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play-button" translatesAutoresizingMaskIntoConstraints="NO" id="6dA-x3-9oj">
+                                                    <rect key="frame" x="347" y="8" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="20" id="TsJ-0f-dC5"/>
+                                                        <constraint firstAttribute="width" secondItem="6dA-x3-9oj" secondAttribute="height" multiplier="1:1" id="Tu3-JS-jeh"/>
+                                                    </constraints>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Titre" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pfs-qX-l75">
                                                     <rect key="frame" x="153" y="11" width="207" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
@@ -101,6 +121,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstItem="pfs-qX-l75" firstAttribute="top" secondItem="aue-eU-KHp" secondAttribute="topMargin" id="1Bz-U9-zw1"/>
+                                                <constraint firstItem="6dA-x3-9oj" firstAttribute="top" secondItem="aue-eU-KHp" secondAttribute="top" constant="8" id="2Ho-0A-kjF"/>
                                                 <constraint firstItem="6q3-iJ-0dE" firstAttribute="trailing" secondItem="aue-eU-KHp" secondAttribute="trailingMargin" id="6Q1-R3-gt0"/>
                                                 <constraint firstItem="DCY-nA-nnp" firstAttribute="leading" secondItem="6q3-iJ-0dE" secondAttribute="leading" id="6yt-z2-V0X"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="DCY-nA-nnp" secondAttribute="bottom" id="HE7-1r-MaY"/>
@@ -111,11 +132,13 @@
                                                 <constraint firstItem="6q3-iJ-0dE" firstAttribute="top" secondItem="pfs-qX-l75" secondAttribute="bottom" constant="2" id="Zit-eu-Xeq"/>
                                                 <constraint firstItem="6q3-iJ-0dE" firstAttribute="leading" secondItem="pfs-qX-l75" secondAttribute="leading" id="azR-fb-OgZ"/>
                                                 <constraint firstAttribute="bottom" secondItem="1gP-5U-WAl" secondAttribute="bottom" constant="8" id="hJ1-y2-JTS"/>
+                                                <constraint firstAttribute="trailing" secondItem="6dA-x3-9oj" secondAttribute="trailing" constant="8" id="lcN-eV-nes"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.1019607843" green="0.1019607843" blue="0.1019607843" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <outlet property="artistLabel" destination="6q3-iJ-0dE" id="lN8-6s-N9s"/>
+                                            <outlet property="playImg" destination="6dA-x3-9oj" id="VM8-cw-1jL"/>
                                             <outlet property="timeLabel" destination="DCY-nA-nnp" id="E6U-qj-xHd"/>
                                             <outlet property="titleLabel" destination="pfs-qX-l75" id="H21-fZ-fFm"/>
                                             <outlet property="trackImage" destination="1gP-5U-WAl" id="1mp-W8-CLc"/>
@@ -149,10 +172,10 @@
                                 </connections>
                             </button>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lzq-Zj-C9g">
-                                <rect key="frame" x="0.0" y="539" width="375" height="128"/>
+                                <rect key="frame" x="0.0" y="567" width="375" height="100"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qe0-DC-4ai">
-                                        <rect key="frame" x="169" y="46" width="37" height="36"/>
+                                        <rect key="frame" x="169" y="32" width="37" height="36"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Play"/>
                                         <connections>
@@ -160,48 +183,29 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r3c-TE-UEn">
-                                        <rect key="frame" x="226" y="49" width="30" height="30"/>
+                                        <rect key="frame" x="226" y="35" width="30" height="30"/>
                                         <state key="normal" title="next"/>
                                         <connections>
                                             <action selector="onNext:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8Hx-3f-8Gv"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8nl-IP-0i7">
-                                        <rect key="frame" x="118" y="49" width="31" height="30"/>
+                                        <rect key="frame" x="118" y="35" width="31" height="30"/>
                                         <state key="normal" title="prev"/>
                                         <connections>
                                             <action selector="onPrevious:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VPU-nM-SPz"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ayt-RS-Aon">
-                                        <rect key="frame" x="8" y="50.5" width="44" height="27"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <state key="normal" title="random"/>
-                                        <connections>
-                                            <action selector="onRandom:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qaR-pC-PQR"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GW0-iY-L6G">
-                                        <rect key="frame" x="321" y="50" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <state key="normal" title="loop"/>
-                                        <connections>
-                                            <action selector="onLoop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="guf-03-mso"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.10000000000000001" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="ayt-RS-Aon" firstAttribute="centerY" secondItem="lzq-Zj-C9g" secondAttribute="centerY" id="4XP-kY-9B9"/>
                                     <constraint firstItem="r3c-TE-UEn" firstAttribute="leading" secondItem="Qe0-DC-4ai" secondAttribute="trailing" constant="20" id="K1e-Ff-tSU"/>
                                     <constraint firstItem="Qe0-DC-4ai" firstAttribute="centerX" secondItem="lzq-Zj-C9g" secondAttribute="centerX" id="b5F-tU-Aij"/>
                                     <constraint firstItem="Qe0-DC-4ai" firstAttribute="leading" secondItem="8nl-IP-0i7" secondAttribute="trailing" constant="20" id="gvj-cT-0XI"/>
-                                    <constraint firstItem="ayt-RS-Aon" firstAttribute="leading" secondItem="lzq-Zj-C9g" secondAttribute="leading" constant="8" id="i8F-zB-80O"/>
                                     <constraint firstItem="8nl-IP-0i7" firstAttribute="centerY" secondItem="lzq-Zj-C9g" secondAttribute="centerY" id="kLG-ZN-kxr"/>
                                     <constraint firstItem="Qe0-DC-4ai" firstAttribute="centerY" secondItem="lzq-Zj-C9g" secondAttribute="centerY" id="l72-Z1-dJx"/>
                                     <constraint firstItem="r3c-TE-UEn" firstAttribute="centerY" secondItem="lzq-Zj-C9g" secondAttribute="centerY" id="r3a-Ym-wZD"/>
-                                    <constraint firstAttribute="height" constant="128" id="xpu-bv-aId"/>
+                                    <constraint firstAttribute="height" constant="100" id="xpu-bv-aId"/>
                                 </constraints>
                             </view>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Buh-Tx-Bic">
@@ -238,6 +242,7 @@
                         <outlet property="loginButton" destination="NQb-PQ-h2S" id="8QG-gf-eKv"/>
                         <outlet property="playBtn" destination="Qe0-DC-4ai" id="MNM-WE-fWw"/>
                         <outlet property="playButtons" destination="lzq-Zj-C9g" id="bGx-7E-1Ey"/>
+                        <outlet property="shuffleBtn" destination="JjG-si-TNx" id="5zF-Z9-LQO"/>
                         <outlet property="tableView" destination="fvN-bY-MK3" id="JgZ-Qm-xVW"/>
                         <outlet property="topView" destination="Grk-3Q-I4v" id="U54-kY-W1B"/>
                     </connections>
@@ -372,4 +377,8 @@
             <point key="canvasLocation" x="901.60000000000002" y="132.68365817091455"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="play-button" width="64" height="64"/>
+        <image name="shuffle" width="64" height="64"/>
+    </resources>
 </document>

@@ -16,6 +16,7 @@ import Alamofire
 
 class ViewController: UIViewController {
  
+    @IBOutlet weak var shuffleBtn: UIButton!
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var connectedView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -24,12 +25,16 @@ class ViewController: UIViewController {
     @IBOutlet weak var playButtons: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    
+    
+    // Variables
     var boxConnected = false
     var albumImages : [UIImageView] = []
     var tracks : [Track] = []
     var isMqttConnected = false
-    
-    // Variables
+    var currentTrack : Track?
+    var currentTrackIndex = 0
+    var needReload = false
     var lastMqttMessage = ""
     var canExecCommands = true
     var auth = SPTAuth.defaultInstance()!
@@ -168,7 +173,7 @@ class ViewController: UIViewController {
         let clientID = "36c5e0558e0545bd93592e79f1c32e02" // put your client ID here
         auth.redirectURL     = URL(string: redirectURL)
         auth.clientID        = clientID
-        auth.requestedScopes = [SPTAuthStreamingScope, SPTAuthPlaylistReadPrivateScope, SPTAuthUserReadTopScope, SPTAuthPlaylistModifyPublicScope, SPTAuthPlaylistModifyPrivateScope, SPTAuthUserReadPrivateScope]
+        auth.requestedScopes = [SPTAuthStreamingScope, SPTAuthPlaylistReadPrivateScope, SPTAuthUserReadTopScope, SPTAuthPlaylistModifyPublicScope, SPTAuthPlaylistModifyPrivateScope, SPTAuthUserReadPrivateScope, "user-read-currently-playing"]
         loginUrl = auth.spotifyWebAuthenticationURL()
     }
     
@@ -193,7 +198,24 @@ class ViewController: UIViewController {
                 }
             }
         })
-        
+    }
+    
+    func getCurrentPlaying(){
+        guard let session = self.session else { return }
+        let url = "https://api.spotify.com/v1/me/player/currently-playing"
+        let headers : HTTPHeaders  = ["Authorization":"Bearer " + session.accessToken]
+        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).validate()
+            .responseJSON(completionHandler: { (response) in
+                
+                if let json = response.result.value as? [String:Any],
+                    let item = json["item"] as? NSDictionary,
+                    let track = Track(dictionary: item){
+                    self.currentTrack = track
+                    
+                    self.tableView.reloadData()
+                }
+                
+            })
     }
     
     func getPlaylistId() -> String{
@@ -213,6 +235,7 @@ class ViewController: UIViewController {
         guard let session = self.session else { return }
         let url = "https://api.spotify.com/v1/users/\(session.canonicalUsername ?? "")/playlists/" + getPlaylistId()
         let headers : HTTPHeaders  = ["Authorization":"Bearer " + session.accessToken]
+        activityIndicator.startAnimating()
         Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).validate()
             .responseJSON(completionHandler: { (response) in
                 
@@ -230,7 +253,10 @@ class ViewController: UIViewController {
                             }
                         }
                     }
+                    
+                    //self.getCurrentPlaying()
                     self.tableView.reloadData()
+                    self.activityIndicator.stopAnimating()
                     self.setImages()
                 }
                 
@@ -250,7 +276,7 @@ class ViewController: UIViewController {
             let player = self.player,
             let playlistURL = self.playlistShowerUri else { return }
         if sender.tag == 0 {
-            if player.playbackState != nil {
+            if player.playbackState != nil && !needReload{
                 player.setIsPlaying(true, callback: { (error) in
                     if let error = error{
                         print(error)
@@ -259,10 +285,12 @@ class ViewController: UIViewController {
                     sender.setTitle("Pause", for: .normal)
                 })
             }else{
-                player.playSpotifyURI(playlistURL.absoluteString, startingWith: 0, startingWithPosition: 0, callback: { (error) in
+                needReload = false
+                player.playSpotifyURI(playlistURL.absoluteString, startingWith: UInt(currentTrackIndex), startingWithPosition: 0, callback: { (error) in
                     if let error = error{
                         print(error)
                     }else{
+                        player.setRepeat(.context, callback: nil)
                         sender.tag = 1
                         sender.setTitle("Pause", for: .normal)
                     }
@@ -275,16 +303,19 @@ class ViewController: UIViewController {
             sender.tag = 0
             sender.setTitle("Play", for: .normal)
         }
+        //self.getCurrentPlaying()
     }
     
     func execNext(){
         guard let player = self.player else { return }
         player.skipNext(nil)
+        //self.getCurrentPlaying()
     }
     
     func execPrevious(){
         guard let player = self.player else { return }
         player.skipPrevious(nil)
+        //self.getCurrentPlaying()
     }
     
     func execVolumeLess() {
@@ -362,9 +393,17 @@ class ViewController: UIViewController {
         execPrevious()
     }
     
-    @IBAction func onLoop(_ sender: Any) {
-        //guard let player = self.player else { return }
-        
+    @IBAction func onLoop(_ sender: UIButton) {
+        guard let player = self.player else { return }
+        if sender.tag == 0 {
+            player.setShuffle(true, callback: nil)
+            shuffleBtn.alpha = 1
+            sender.tag = 1
+            return
+        }
+        player.setShuffle(false, callback: nil)
+        shuffleBtn.alpha = 0.5
+        sender.tag = 0
     }
     
     @IBAction func onRandom(_ sender: Any) {
@@ -514,7 +553,6 @@ extension ViewController : CocoaMQTTDelegate{
 extension ViewController : UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return tracks.count
     }
     
@@ -553,6 +591,12 @@ extension ViewController : UITableViewDataSource, UITableViewDelegate {
         
         cell.trackImage.image = albumImages[indexPath.row].image
         
+        cell.playImg.isHidden = true
+        if track.name == currentTrack?.name{
+            cell.playImg.isHidden = false
+            currentTrackIndex = indexPath.row
+        }
+        
         return cell
     }
     
@@ -589,10 +633,10 @@ extension ViewController : UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-        return .none
-    }
-    
+//    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+//        return .none
+//    }
+
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         return false
     }
@@ -612,30 +656,20 @@ extension ViewController : UITableViewDataSource, UITableViewDelegate {
         Alamofire.request(url, method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: headers)//.validate()
             .responseJSON(completionHandler: { (response) in
                 
-                print("Tracks deleted")
-                self.getPlaylistFromApi()
+                //self.getPlaylistFromApi()
+                print("Tracks moved")
             })
         
-        return
+        needReload = true
         
-        var tmpTracks : [Track] = []
-        var tmpImages : [UIImageView] = []
+        let tmpTrack = tracks[sourceIndexPath.row]
+        let tmpImage = albumImages[sourceIndexPath.row]
         
-        for i in (sourceIndexPath.row+1)..<(destinationIndexPath.row+1){
-            tmpTracks.append(tracks[i])
-            tmpImages.append(albumImages[i])
-        }
+        tracks.remove(at: sourceIndexPath.row)
+        tracks.insert(tmpTrack, at: destinationIndexPath.row)
         
-        
-        tracks[destinationIndexPath.row] = tracks[sourceIndexPath.row]
-        albumImages[destinationIndexPath.row] = albumImages[sourceIndexPath.row]
-        
-        var index = 0;
-        for i in sourceIndexPath.row..<destinationIndexPath.row{
-            tracks[i] = tmpTracks[index]
-            albumImages[i] = tmpImages[index]
-            index += 1
-        }
+        albumImages.remove(at: sourceIndexPath.row)
+        albumImages.insert(tmpImage, at: destinationIndexPath.row)
     }
 }
 

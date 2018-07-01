@@ -13,6 +13,7 @@ class PlaylistCell: UITableViewCell {
     let backgroundColor1 = #colorLiteral(red: 0.1622036099, green: 0.1622084081, blue: 0.1622058451, alpha: 1)
     let backgroundColor2 = #colorLiteral(red: 0.1336126328, green: 0.1336126328, blue: 0.1336126328, alpha: 1)
 
+    @IBOutlet weak var playImg: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var trackImage: UIImageView!
     @IBOutlet weak var artistLabel: UILabel!
