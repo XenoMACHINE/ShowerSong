@@ -24,6 +24,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        searchBar.becomeFirstResponder()
         // Do any additional setup after loading the view.
     }
 
@@ -136,7 +137,8 @@ extension SearchViewController : UITableViewDataSource, UITableViewDelegate{
         self.searchBar.text = ""
         self.albumImages.removeAll()
         self.tracks.removeAll()
-        tableView.reloadData()
+        self.searchBar.resignFirstResponder()
+        self.tableView.reloadData()
         showToast(message: "Musique ajoutée")
     }
     
@@ -159,6 +161,10 @@ extension SearchViewController : UISearchBarDelegate {
         }else{
             searchOnSpotify(text: text)
         }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
 

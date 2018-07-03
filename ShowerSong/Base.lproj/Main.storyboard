@@ -208,7 +208,7 @@
                                     <constraint firstAttribute="height" constant="100" id="xpu-bv-aId"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Buh-Tx-Bic">
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Buh-Tx-Bic">
                                 <rect key="frame" x="177" y="390" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
